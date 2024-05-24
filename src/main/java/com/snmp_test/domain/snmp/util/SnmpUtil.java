@@ -15,9 +15,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class SnmpUtil {
 
-    public void snmpGet() {
+    public String snmpGet() {
             log.info("snmpGet");
-
+            String return_text;
            try {
             // SNMP 통신 설정
             Address targetAddress = GenericAddress.parse("udp:127.0.0.1/161");
@@ -48,17 +48,24 @@ public class SnmpUtil {
                 int errorStatus = responsePDU.getErrorStatus();
                 if (errorStatus == PDU.noError) {
                     log.info("SNMP GET Response: {}" ,responsePDU.getVariableBindings() );
+                    return_text = String.valueOf(responsePDU.getVariableBindings());
+
                 } else {
                     log.warn("Error: " + responsePDU.getErrorStatusText());
-
+                    return_text = String.valueOf(responsePDU.getErrorStatusText());
                 }
             } else {
                 log.warn("Error: No response from SNMP agent.");
+                return_text = "no response from snmp agent";
             }
 
             snmp.close();
+
         } catch (Exception e) {
             e.printStackTrace();
+            return_text = "error";
+
         }
+        return return_text;
     }
 }

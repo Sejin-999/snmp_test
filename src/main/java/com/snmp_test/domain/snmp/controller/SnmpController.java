@@ -21,5 +21,17 @@ public class SnmpController {
                 return ResponseEntity.ok("test success");
         }
 
+        @GetMapping("/snmpTest")
+        public ResponseEntity snmpTest(){
+                log.info("test - snmp");
+                String return_text = snmpUtil.snmpGet();
+
+                if(return_text.equals("error")){
+                        return ResponseEntity.status(400).body("error");
+                }else{
+                        return ResponseEntity.ok("test success\n"+return_text);
+                }
+
+        }
 
 }
